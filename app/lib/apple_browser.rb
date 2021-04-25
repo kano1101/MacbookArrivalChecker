@@ -11,7 +11,7 @@ class AppleBrowser
   def self.run
     headless = Headless.new
     headless.start
-    browser = Watir::Browser.new :phantomjs
+    browser = Watir::Browser.new :chrome
     messages = URLS.map do |url|
       browser.goto(url)
       is_exists_word = browser.html.include?('在庫切れ') ? 'なし' : 'あり'
@@ -33,6 +33,9 @@ class AppleBrowser
 
     result_messages.each do |message|
       LineNotify.send(message)
+    end
+    if result_messages.count == 0
+      LineNotify.send('在庫なし')
     end
   end
 end
